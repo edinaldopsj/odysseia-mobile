@@ -1,6 +1,6 @@
+import { makeStyles, Text, Button, useThemeMode } from "@rneui/themed";
 import React from "react";
 import { View } from "react-native";
-import { makeStyles, Text, Button, useThemeMode } from "@rneui/themed";
 
 export default function App() {
   const styles = useStyles();

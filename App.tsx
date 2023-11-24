@@ -1,6 +1,7 @@
-import React from "react";
 import { createTheme, ThemeProvider } from "@rneui/themed";
-import Component from "./components/MyComponent";
+import React from "react";
+
+import Home from "./screens/Home";
 
 const theme = createTheme({
   lightColors: {},
@@ -10,7 +11,7 @@ const theme = createTheme({
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Component />
+      <Home />
     </ThemeProvider>
   );
 }
