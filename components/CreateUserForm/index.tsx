@@ -12,6 +12,7 @@ import { Alert, View } from "react-native";
 import { z } from "zod";
 
 import PT_BR from "../../lang/pt-br";
+import { useInputStyle } from "../../styles/inputs";
 import { getReadableValidationErrorMessage } from "../../utils/forms";
 
 const createUserFormSchema = z.object({
@@ -28,6 +29,8 @@ function CreateUserForm({
 }: {
   onSuccess: SubmitHandler<createUserFormData>;
 }) {
+  const inputStyle = useInputStyle();
+
   const methods = useForm<createUserFormData>({
     resolver: zodResolver(createUserFormSchema),
     defaultValues: {
@@ -54,6 +57,8 @@ function CreateUserForm({
             errorMessage={error?.message && PT_BR.VALIDATION.EMAIL}
             value={value}
             onChangeText={(text) => onChange(text)}
+            inputStyle={inputStyle.input}
+            inputContainerStyle={inputStyle.inputContainer}
           />
         )}
         name="email"

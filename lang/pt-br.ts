@@ -1,4 +1,8 @@
 const PT_BR = {
+  WRAPPER: {
+    SWITCH_THEME: "Mudar tema",
+  },
+
   HOME: {
     TITLE: "Bem vindo à Odysseia",
     SUBTITLE: "Entre com um endereço de email e viaje!",

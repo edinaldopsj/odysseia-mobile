@@ -12,6 +12,7 @@ import { Alert, View } from "react-native";
 import { z } from "zod";
 
 import PT_BR from "../../lang/pt-br";
+import { useInputStyle } from "../../styles/inputs";
 import { getReadableValidationErrorMessage } from "../../utils/forms";
 
 const getUserCodeSchema = z.object({
@@ -27,6 +28,8 @@ function GetUserCodeForm({
   onSuccess: SubmitHandler<getUserCodeData>;
   onCancel: () => void;
 }) {
+  const inputStyle = useInputStyle();
+
   const methods = useForm<getUserCodeData>({
     resolver: zodResolver(getUserCodeSchema),
     defaultValues: {
@@ -53,6 +56,8 @@ function GetUserCodeForm({
             errorMessage={error?.message && PT_BR.VALIDATION.EMAIL}
             value={value}
             onChangeText={(text) => onChange(text)}
+            inputContainerStyle={inputStyle.inputContainer}
+            inputStyle={inputStyle.input}
           />
         )}
         name="code"
