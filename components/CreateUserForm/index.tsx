@@ -41,7 +41,6 @@ function CreateUserForm({
   const onSubmit: SubmitHandler<createUserFormData> = (data) => onSuccess(data);
 
   const onError: SubmitErrorHandler<createUserFormData> = (errors, e) => {
-    // console.log(JSON.stringify(errors));
     Alert.alert("Warning", getReadableValidationErrorMessage(errors));
   };
 

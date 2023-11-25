@@ -1,17 +1,45 @@
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createTheme, ThemeProvider } from "@rneui/themed";
 import React from "react";
 
+import PT_BR from "./lang/pt-br";
 import Home from "./screens/Home";
+import MyTrips from "./screens/MyTrips";
 
 const theme = createTheme({
   lightColors: {},
   darkColors: {},
 });
 
-export default function App() {
+export type RootStackParamList = {
+  Home: undefined;
+  MyTrips: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Home />
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Home"
+            options={{ headerShown: false }}
+            component={Home}
+          />
+          <Stack.Screen
+            name="MyTrips"
+            component={MyTrips}
+            options={{
+              headerTitle: PT_BR.SCREENS.MY_TRIPS,
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </ThemeProvider>
   );
 }
+
+export default App;

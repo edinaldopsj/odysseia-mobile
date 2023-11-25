@@ -1,14 +1,18 @@
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { makeStyles, Text } from "@rneui/themed";
 import React, { useState } from "react";
 import { View } from "react-native";
 
+import { RootStackParamList } from "../App";
 import CreateUserForm, {
   createUserFormData,
 } from "../components/CreateUserForm";
 import GetUserCodeForm, { getUserCodeData } from "../components/GetUserCode";
 import PT_BR from "../lang/pt-br";
 
-function Home() {
+type Props = NativeStackScreenProps<RootStackParamList, "Home">;
+
+function Home({ navigation }: Props) {
   const [hasEmail, setHasEmail] = useState(false);
 
   const styles = useStyles();
@@ -20,6 +24,7 @@ function Home() {
 
   const onGetUserCodeFormSuccess = (data: getUserCodeData) => {
     console.log({ data });
+    navigation.navigate("MyTrips");
   };
 
   const onCancelCodeSubmit = () => {

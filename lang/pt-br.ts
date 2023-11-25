@@ -3,6 +3,11 @@ const PT_BR = {
     SWITCH_THEME: "Mudar tema",
   },
 
+  SCREENS: {
+    HOME: "Início",
+    MY_TRIPS: "Minhas viagens",
+  },
+
   HOME: {
     TITLE: "Bem vindo à Odysseia",
     SUBTITLE: "Entre com um endereço de email e viaje!",
@@ -15,6 +20,24 @@ const PT_BR = {
     CODE_PLACEHOLDER: "Digite o código recebido",
     SUBMIT: "Enviar",
     SUBMIT_CODE: "Enviar código e entrar",
+    CANCEL: "Cancelar",
+  },
+
+  MY_TRIPS: {
+    INFO: "Ver mais",
+    DELETE: "Remover",
+    ADD: "Nova viagem",
+  },
+
+  ADD_TRIP_FORM: {
+    TITLE: "Nova viagem",
+    WHERE: "Para onde?",
+    WHERE_PLACEHOLDER: "Digite o destino",
+    WHEN_FROM: "De quando?",
+    WHEN_PLACEHOLDER: "Digite a data de partida",
+    WHEN_TO: "Até quando?",
+    WHEN_TO_PLACEHOLDER: "Digite a data de chegada",
+    SUBMIT: "Adicionar",
     CANCEL: "Cancelar",
   },
 

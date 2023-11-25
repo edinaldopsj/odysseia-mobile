@@ -39,8 +39,7 @@ function GetUserCodeForm({
 
   const onSubmit: SubmitHandler<getUserCodeData> = (data) => onSuccess(data);
 
-  const onError: SubmitErrorHandler<getUserCodeData> = (errors, e) => {
-    // console.log(JSON.stringify(errors));
+  const onError: SubmitErrorHandler<getUserCodeData> = (errors) => {
     Alert.alert("Warning", getReadableValidationErrorMessage(errors));
   };
 
@@ -53,7 +52,7 @@ function GetUserCodeForm({
             label={PT_BR.CREATE_USER_FORM.CODE}
             placeholder={PT_BR.CREATE_USER_FORM.CODE_PLACEHOLDER}
             errorStyle={{ color: "red" }}
-            errorMessage={error?.message && PT_BR.VALIDATION.EMAIL}
+            errorMessage={error?.message && PT_BR.VALIDATION.CODE}
             value={value}
             onChangeText={(text) => onChange(text)}
             inputContainerStyle={inputStyle.inputContainer}
