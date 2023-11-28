@@ -3,8 +3,8 @@ import { useState } from "react";
 import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import AddTripBottomSheet from "../components/AddTripBottomSheet";
-import RemoveTripDialog from "../components/RemoveTripDialog";
+import AddDiaryEntryBottomSheet from "../components/AddDiaryEntryBottomSheet";
+import RemoveDiaryEntryDialog from "../components/RemoveDiaryEntryDialog";
 import PT_BR from "../lang/pt-br";
 
 function MyDiaries() {
@@ -46,7 +46,10 @@ function MyDiaries() {
               Mirante do Bosteiro
             </ListItem.Title>
             <ListItem.Subtitle>
-              <Text>De: 24/09/2023 | Até: 24/10/2023</Text>
+              <Text>Em: 24/09/2023</Text>
+            </ListItem.Subtitle>
+            <ListItem.Subtitle>
+              <Text>Bela viagem pelo bosteiro</Text>
             </ListItem.Subtitle>
           </ListItem.Content>
           <ListItem.Chevron />
@@ -66,12 +69,12 @@ function MyDiaries() {
         />
       </View>
 
-      <AddTripBottomSheet
+      <AddDiaryEntryBottomSheet
         isVisible={isAddTripModalVisible}
         onClose={() => setIsAddTripModalVisible(false)}
       />
 
-      <RemoveTripDialog
+      <RemoveDiaryEntryDialog
         isVisible={isRemoveTripDialogVisible}
         onClose={() => setIsRemoveTripDialogVisible(false)}
         tripId="123"

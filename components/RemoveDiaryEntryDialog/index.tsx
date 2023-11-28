@@ -8,18 +8,18 @@ type Props = {
   onClose: () => void;
 };
 
-function RemoveTripDialog({ isVisible, onClose }: Props) {
+function RemoveDiaryEntryDialog({ isVisible, onClose }: Props) {
   return (
     <Dialog isVisible={isVisible} onBackdropPress={() => onClose()}>
-      <Dialog.Title title={PT_BR.REMOVE_TRIP_DIALOG.TITLE} />
-      <Text>{PT_BR.REMOVE_TRIP_DIALOG.MESSAGE}</Text>
+      <Dialog.Title title={PT_BR.REMOVE_DIARY_ENTRY_DIALOG.TITLE} />
+      <Text>{PT_BR.REMOVE_DIARY_ENTRY_DIALOG.MESSAGE}</Text>
       <Dialog.Actions>
         <Dialog.Button
-          title={PT_BR.REMOVE_TRIP_DIALOG.YES}
+          title={PT_BR.REMOVE_DIARY_ENTRY_DIALOG.YES}
           onPress={() => console.log("Primary Action Clicked!")}
         />
         <Dialog.Button
-          title={PT_BR.REMOVE_TRIP_DIALOG.NO}
+          title={PT_BR.REMOVE_DIARY_ENTRY_DIALOG.NO}
           onPress={() => onClose()}
         />
       </Dialog.Actions>
@@ -27,4 +27,4 @@ function RemoveTripDialog({ isVisible, onClose }: Props) {
   );
 }
 
-export default RemoveTripDialog;
+export default RemoveDiaryEntryDialog;

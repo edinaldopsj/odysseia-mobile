@@ -55,6 +55,24 @@ const PT_BR = {
     NO: "Não",
   },
 
+  REMOVE_DIARY_ENTRY_DIALOG: {
+    TITLE: "Remover entrada do diário",
+    MESSAGE: "Tem certeza que deseja remover esta entrada do diário?",
+    YES: "Sim",
+    NO: "Não",
+  },
+
+  ADD_DIARY_ENTRY_FORM: {
+    TITLE: "Nova entrada do diário",
+    WHEN_TO: "Quando foi?",
+    LOCATION: "Onde foi?",
+    LOCATION_PLACEHOLDER: "Digite o local",
+    DESCRIPTION: "Como foi?",
+    DESCRIPTION_PLACEHOLDER: "Digite a descrição",
+    SUBMIT: "Adicionar",
+    CANCEL: "Cancelar",
+  },
+
   VALIDATION: {
     NOT_EMPTY: "Este campo não pode ser vazio",
     EMAIL: "Digite um endereço de email válido",
