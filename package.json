@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
+    "@react-native-community/datetimepicker": "6.5.2",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
     "@rneui/base": "4.0.0-rc.7",
