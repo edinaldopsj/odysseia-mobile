@@ -5,6 +5,7 @@ import React from "react";
 
 import PT_BR from "./lang/pt-br";
 import Home from "./screens/Home";
+import MyDiaries from "./screens/MyDiaries";
 import MyTrips from "./screens/MyTrips";
 
 const theme = createTheme({
@@ -15,6 +16,7 @@ const theme = createTheme({
 export type RootStackParamList = {
   Home: undefined;
   MyTrips: undefined;
+  MyDiaries: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -34,6 +36,13 @@ function App() {
             component={MyTrips}
             options={{
               headerTitle: PT_BR.SCREENS.MY_TRIPS,
+            }}
+          />
+          <Stack.Screen
+            name="MyDiaries"
+            component={MyDiaries}
+            options={{
+              headerTitle: PT_BR.SCREENS.MY_DIARIES,
             }}
           />
         </Stack.Navigator>

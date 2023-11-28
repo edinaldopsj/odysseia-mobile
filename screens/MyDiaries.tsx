@@ -1,17 +1,13 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Button, FAB, Icon, ListItem, Text, makeStyles } from "@rneui/themed";
 import { useState } from "react";
 import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { RootStackParamList } from "../App";
 import AddTripBottomSheet from "../components/AddTripBottomSheet";
 import RemoveTripDialog from "../components/RemoveTripDialog";
 import PT_BR from "../lang/pt-br";
 
-type Props = NativeStackScreenProps<RootStackParamList, "MyTrips">;
-
-function MyTrips({ navigation }: Props) {
+function MyDiaries() {
   const styles = useStyles();
 
   const [isAddTripModalVisible, setIsAddTripModalVisible] = useState(false);
@@ -29,25 +25,25 @@ function MyTrips({ navigation }: Props) {
         <ListItem.Swipeable
           leftContent={(reset) => (
             <Button
-              title={PT_BR.MY_TRIPS.INFO}
-              onPress={() => navigation.navigate("MyDiaries")}
+              title={PT_BR.MY_DIARIES.INFO}
+              onPress={() => reset()}
               icon={{ name: "info", color: "white" }}
               buttonStyle={{ minHeight: "100%" }}
             />
           )}
           rightContent={(reset) => (
             <Button
-              title={PT_BR.MY_TRIPS.DELETE}
+              title={PT_BR.MY_DIARIES.DELETE}
               onPress={() => triggerDeleteModal(reset)}
               icon={{ name: "delete", color: "white" }}
               buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
             />
           )}
         >
-          <Icon type="ionicon" name="airplane" />
+          <Icon type="simple-line-icon" name="direction" />
           <ListItem.Content>
             <ListItem.Title style={{ paddingBottom: 3 }}>
-              Santa Caralha do Norte
+              Mirante do Bosteiro
             </ListItem.Title>
             <ListItem.Subtitle>
               <Text>De: 24/09/2023 | Até: 24/10/2023</Text>
@@ -63,7 +59,7 @@ function MyTrips({ navigation }: Props) {
             color: "white",
             type: "entypo",
           }}
-          title={PT_BR.MY_TRIPS.ADD}
+          title={PT_BR.MY_DIARIES.ADD}
           size="small"
           color="green"
           onPress={() => setIsAddTripModalVisible(true)}
@@ -97,4 +93,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default MyTrips;
+export default MyDiaries;

@@ -3,7 +3,6 @@ import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import {
   BottomSheet,
   Button,
-  Divider,
   Icon,
   Input,
   Text,
@@ -25,18 +24,24 @@ import { getReadableValidationErrorMessage } from "../../utils/forms";
 
 type Props = {
   isVisible: boolean;
+  onClose: () => void;
 };
 
-const createTripFormSchema = z.object({
-  destination: z.string().min(1, PT_BR.VALIDATION.NOT_EMPTY),
-  startDate: z.date(),
-  endDate: z.date(),
-  status: z.enum(["CREATED", "INPROGRESS", "FINISHED"]),
-});
+const createTripFormSchema = z
+  .object({
+    destination: z.string().min(1, PT_BR.VALIDATION.NOT_EMPTY),
+    startDate: z.date(),
+    endDate: z.date(),
+    status: z.enum(["CREATED", "INPROGRESS", "FINISHED"]),
+  })
+  .refine((data) => data.endDate > data.startDate, {
+    message: PT_BR.VALIDATION.END_DATE_GREATER_THAN_START_DATE,
+    path: ["endDate"],
+  });
 
 export type createTripFormData = z.infer<typeof createTripFormSchema>;
 
-function AddTripBottomSheet({ isVisible }: Props) {
+function AddTripBottomSheet({ isVisible, onClose }: Props) {
   const styles = useStyles();
   const inputStyle = useInputStyle();
 
@@ -76,6 +81,11 @@ function AddTripBottomSheet({ isVisible }: Props) {
     data: createTripFormData,
   ) => console.log({ data });
 
+  const closeModal = () => {
+    methods.reset();
+    onClose();
+  };
+
   return (
     <>
       <BottomSheet isVisible={isVisible}>
@@ -112,12 +122,11 @@ function AddTripBottomSheet({ isVisible }: Props) {
                     <Icon color="#FFF" type="ionicon" name="calendar-outline" />
                   }
                 />
-
                 <Text>{`  ${
                   PT_BR.ADD_TRIP_FORM.WHEN_FROM
                 } ${watchStartDate.toLocaleDateString("pt-BR")}`}</Text>
               </View>
-              <Divider style={styles.divider} />
+
               <View style={styles.dateButtonArea}>
                 <Button
                   onPress={() => showDatePicker("end")}
@@ -129,12 +138,19 @@ function AddTripBottomSheet({ isVisible }: Props) {
                   PT_BR.ADD_TRIP_FORM.WHEN_TO
                 } ${watchEndDate.toLocaleDateString("pt-BR")}`}</Text>
               </View>
-              <Divider style={styles.divider} />
-              <Button
-                onPress={methods.handleSubmit(onSubmit, onError)}
-                title={PT_BR.ADD_TRIP_FORM.SUBMIT}
-                style={styles.submitButton}
-              />
+
+              <View style={styles.submitButtonArea}>
+                <Button
+                  onPress={() => closeModal()}
+                  title={PT_BR.ADD_TRIP_FORM.CANCEL}
+                  style={styles.submitButton}
+                />
+                <Button
+                  onPress={methods.handleSubmit(onSubmit, onError)}
+                  title={PT_BR.ADD_TRIP_FORM.SUBMIT}
+                  style={styles.submitButton}
+                />
+              </View>
             </View>
           </FormProvider>
         </View>
@@ -145,15 +161,24 @@ function AddTripBottomSheet({ isVisible }: Props) {
 
 const useStyles = makeStyles(() => ({
   bottomSheet: { backgroundColor: "white", padding: 16 },
-  divider: { paddingVertical: 1 },
   textTitle: { paddingBottom: 10 },
   buttonArea: { paddingHorizontal: 10 },
   dateButtonArea: {
     flexDirection: "row",
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#CCC",
+    borderRadius: 5,
+    marginBottom: 5,
+  },
+  submitButtonArea: {
+    paddingTop: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   submitButton: {
-    paddingTop: 15,
+    marginVertical: 15,
   },
 }));
 

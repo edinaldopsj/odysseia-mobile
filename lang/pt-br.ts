@@ -6,6 +6,7 @@ const PT_BR = {
   SCREENS: {
     HOME: "Início",
     MY_TRIPS: "Minhas viagens",
+    MY_DIARIES: "Meus diários",
   },
 
   HOME: {
@@ -29,6 +30,12 @@ const PT_BR = {
     ADD: "Nova viagem",
   },
 
+  MY_DIARIES: {
+    INFO: "Ver mais",
+    DELETE: "Remover",
+    ADD: "Nova entrada",
+  },
+
   ADD_TRIP_FORM: {
     TITLE: "Nova viagem",
     WHERE: "Para onde?",
@@ -41,10 +48,21 @@ const PT_BR = {
     CANCEL: "Cancelar",
   },
 
+  REMOVE_TRIP_DIALOG: {
+    TITLE: "Remover viagem",
+    MESSAGE: "Tem certeza que deseja remover esta viagem?",
+    YES: "Sim",
+    NO: "Não",
+  },
+
   VALIDATION: {
     NOT_EMPTY: "Este campo não pode ser vazio",
     EMAIL: "Digite um endereço de email válido",
     CODE: "Digite um código válido de 6 dígitos",
+    END_DATE_GREATER_THAN_START_DATE:
+      "A data de chegada deve ser maior que a data de partida",
+    END_DATE_GREATER_THAN_TODAY:
+      "A data de chegada deve ser maior que a data de hoje",
   },
 };
 
