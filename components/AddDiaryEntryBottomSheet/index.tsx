@@ -15,15 +15,18 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { Alert, View } from "react-native";
+import { Alert, ToastAndroid, View } from "react-native";
 import { z } from "zod";
 
 import PT_BR from "../../lang/pt-br";
+import { addDiary } from "../../providers/diaries";
 import { useInputStyle } from "../../styles/inputs";
 import { getReadableValidationErrorMessage } from "../../utils/forms";
 
 type Props = {
   isVisible: boolean;
+  tripId: number;
+  token: string;
   onClose: () => void;
 };
 
@@ -37,7 +40,12 @@ export type createDiaryEntryFormData = z.infer<
   typeof createDiaryEntryFormSchema
 >;
 
-function AddDiaryEntryBottomSheet({ isVisible, onClose }: Props) {
+function AddDiaryEntryBottomSheet({
+  isVisible,
+  tripId,
+  token,
+  onClose,
+}: Props) {
   const styles = useStyles();
   const inputStyle = useInputStyle();
 
@@ -67,12 +75,23 @@ function AddDiaryEntryBottomSheet({ isVisible, onClose }: Props) {
     Alert.alert("Warning", getReadableValidationErrorMessage(errors));
   };
 
-  const onSubmit: SubmitHandler<createDiaryEntryFormData> = (
+  const onSubmit: SubmitHandler<createDiaryEntryFormData> = async (
     data: createDiaryEntryFormData,
-  ) => console.log({ data });
+  ) => {
+    const hasAddedDiaryEntry = await addDiary(data, tripId, token);
+
+    if (hasAddedDiaryEntry) {
+      ToastAndroid.show(PT_BR.ADD_DIARY_ENTRY_FORM.SUCCESS, ToastAndroid.SHORT);
+      onClose();
+    }
+  };
 
   const closeModal = () => {
-    methods.reset();
+    methods.reset({
+      location: "",
+      description: "",
+      date: new Date(),
+    });
     onClose();
   };
 

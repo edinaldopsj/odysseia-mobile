@@ -37,6 +37,8 @@ const PT_BR = {
     INFO: "Ver mais",
     DELETE: "Remover",
     ADD: "Nova entrada",
+    FROM: "De",
+    TO: "Até",
   },
 
   ADD_TRIP_FORM: {
@@ -90,6 +92,7 @@ const PT_BR = {
     DESCRIPTION_PLACEHOLDER: "Digite a descrição",
     SUBMIT: "Adicionar",
     CANCEL: "Cancelar",
+    SUCCESS: "Entrada do diário adicionada com sucesso!",
   },
 
   VALIDATION: {

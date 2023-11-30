@@ -46,21 +46,8 @@ function MyTrips({ navigation, route }: Props) {
   } = useGetTrips(token);
 
   const triggerUpdateModal = (id: number) => {
-    console.log({ id });
-
     setUpdateTripId(id);
     setIsUpdateTripModalVisible(true);
-  };
-
-  const triggerDeleteModal = (onClose: () => void, id: number) => {
-    setIsRemoveTripDialogVisible(true);
-    setRemoveTripId(id);
-    onClose();
-  };
-
-  const reloadAfterAdd = () => {
-    setIsAddTripModalVisible(false);
-    refetchTrips();
   };
 
   const reloadAfterUpdate = () => {
@@ -70,10 +57,21 @@ function MyTrips({ navigation, route }: Props) {
     refetchTrips();
   };
 
+  const triggerDeleteModal = (onClose: () => void, id: number) => {
+    setIsRemoveTripDialogVisible(true);
+    setRemoveTripId(id);
+    onClose();
+  };
+
   const reloadAfterRemoval = () => {
     setIsRemoveTripDialogVisible(false);
     setRemoveTripId(null);
 
+    refetchTrips();
+  };
+
+  const reloadAfterAdd = () => {
+    setIsAddTripModalVisible(false);
     refetchTrips();
   };
 
