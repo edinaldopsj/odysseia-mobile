@@ -8,6 +8,7 @@ import { z } from "zod";
 import { RootStackParamList } from "../App";
 import AddTripBottomSheet from "../components/AddTripBottomSheet";
 import RemoveTripDialog from "../components/RemoveTripDialog";
+import UpdateTripBottomSheet from "../components/UpdateTripBottomSheet";
 import PT_BR from "../lang/pt-br";
 import useGetTrips from "../providers/trips";
 
@@ -20,7 +21,7 @@ const getTripSchema = z.object({
   destination: z.string(),
   endDate: z.string(),
   startDate: z.string(),
-  status: z.string(),
+  status: z.enum(["CREATED", "INPROGRESS", "FINISHED"]),
 });
 
 type Props = NativeStackScreenProps<RootStackParamList, "MyTrips">;
@@ -30,6 +31,9 @@ function MyTrips({ navigation, route }: Props) {
   const styles = useStyles();
 
   const [isAddTripModalVisible, setIsAddTripModalVisible] = useState(false);
+  const [isUpdateTripModalVisible, setIsUpdateTripModalVisible] =
+    useState(false);
+  const [updateTripId, setUpdateTripId] = useState<number | null>(null);
   const [removeTripId, setRemoveTripId] = useState<number | null>(null);
   const [isRemoveTripDialogVisible, setIsRemoveTripDialogVisible] =
     useState(false);
@@ -41,21 +45,35 @@ function MyTrips({ navigation, route }: Props) {
     refetch: refetchTrips,
   } = useGetTrips(token);
 
+  const triggerUpdateModal = (id: number) => {
+    console.log({ id });
+
+    setUpdateTripId(id);
+    setIsUpdateTripModalVisible(true);
+  };
+
   const triggerDeleteModal = (onClose: () => void, id: number) => {
     setIsRemoveTripDialogVisible(true);
     setRemoveTripId(id);
     onClose();
   };
 
-  const reloadAfterRemoval = () => {
-    setIsRemoveTripDialogVisible(false);
-    setRemoveTripId(null);
+  const reloadAfterAdd = () => {
+    setIsAddTripModalVisible(false);
+    refetchTrips();
+  };
+
+  const reloadAfterUpdate = () => {
+    setIsUpdateTripModalVisible(false);
+    setUpdateTripId(null);
 
     refetchTrips();
   };
 
-  const reloadAfterAdd = () => {
-    setIsAddTripModalVisible(false);
+  const reloadAfterRemoval = () => {
+    setIsRemoveTripDialogVisible(false);
+    setRemoveTripId(null);
+
     refetchTrips();
   };
 
@@ -66,6 +84,9 @@ function MyTrips({ navigation, route }: Props) {
           tripData?.map((trip: getTripData) => (
             <ListItem.Swipeable
               key={trip.id}
+              onLongPress={() => {
+                triggerUpdateModal(trip.id);
+              }}
               leftContent={() => (
                 <Button
                   title={PT_BR.MY_TRIPS.INFO}
@@ -91,7 +112,7 @@ function MyTrips({ navigation, route }: Props) {
               <Icon type="ionicon" name="airplane" />
               <ListItem.Content>
                 <ListItem.Title style={{ paddingBottom: 3 }}>
-                  {trip?.destination ?? "Sem destino"}
+                  {trip?.destination ?? PT_BR.MY_TRIPS.NO_DESTINATION}
                 </ListItem.Title>
                 <ListItem.Subtitle>
                   <Text>{`${PT_BR.MY_TRIPS.FROM}: ${new Date(
@@ -124,6 +145,13 @@ function MyTrips({ navigation, route }: Props) {
       <AddTripBottomSheet
         isVisible={isAddTripModalVisible}
         onClose={() => reloadAfterAdd()}
+        token={token}
+      />
+
+      <UpdateTripBottomSheet
+        isVisible={isUpdateTripModalVisible}
+        onClose={() => reloadAfterUpdate()}
+        tripId={updateTripId ?? 0}
         token={token}
       />
 

@@ -8,6 +8,7 @@ import {
   Text,
   makeStyles,
 } from "@rneui/themed";
+import { useEffect } from "react";
 import {
   Controller,
   FormProvider,
@@ -19,17 +20,18 @@ import { Alert, ToastAndroid, View } from "react-native";
 import { z } from "zod";
 
 import PT_BR from "../../lang/pt-br";
-import { addTrip } from "../../providers/trips";
+import { updateTrip, useGetTripById } from "../../providers/trips";
 import { useInputStyle } from "../../styles/inputs";
 import { getReadableValidationErrorMessage } from "../../utils/forms";
 
 type Props = {
   isVisible: boolean;
+  tripId: number;
   token: string;
   onClose: () => void;
 };
 
-const createTripFormSchema = z
+const updateTripFormSchema = z
   .object({
     destination: z.string().min(1, PT_BR.VALIDATION.NOT_EMPTY),
     startDate: z.date(),
@@ -41,20 +43,28 @@ const createTripFormSchema = z
     path: ["endDate"],
   });
 
-export type createTripFormData = z.infer<typeof createTripFormSchema>;
+export type updateTripFormData = z.infer<typeof updateTripFormSchema>;
 
-function AddTripBottomSheet({ isVisible, token, onClose }: Props) {
+function UpdateTripBottomSheet({ isVisible, tripId, token, onClose }: Props) {
   const styles = useStyles();
   const inputStyle = useInputStyle();
 
-  const methods = useForm<createTripFormData>({
-    resolver: zodResolver(createTripFormSchema),
-    defaultValues: {
-      destination: "",
-      startDate: new Date(),
-      endDate: new Date(),
-      status: "CREATED",
-    },
+  const {
+    data: tripData,
+    isLoading: isLoadingTrip,
+    refetch,
+  } = useGetTripById(tripId, token);
+
+  const defaultValues = {
+    destination: tripData?.destination || "",
+    startDate: tripData?.startDate ? new Date(tripData?.startDate) : new Date(),
+    endDate: tripData?.endDate ? new Date(tripData?.endDate) : new Date(),
+    status: tripData?.status || "CREATED",
+  };
+
+  const methods = useForm<updateTripFormData>({
+    resolver: zodResolver(updateTripFormSchema),
+    defaultValues,
   });
 
   const watchStartDate = methods.watch("startDate");
@@ -75,32 +85,43 @@ function AddTripBottomSheet({ isVisible, token, onClose }: Props) {
     });
   };
 
-  const onError: SubmitErrorHandler<createTripFormData> = (errors, e) => {
+  const onError: SubmitErrorHandler<updateTripFormData> = (errors, e) => {
     Alert.alert("Warning", getReadableValidationErrorMessage(errors));
   };
 
-  const onSubmit: SubmitHandler<createTripFormData> = async (
-    data: createTripFormData,
+  const onSubmit: SubmitHandler<updateTripFormData> = async (
+    data: updateTripFormData,
   ) => {
-    const hasAddedTrip = await addTrip(data, token);
+    const hasUpdatedTrip = await updateTrip(tripId, data, token);
 
-    if (hasAddedTrip) {
-      ToastAndroid.show(PT_BR.ADD_TRIP_FORM.SUCCESS, ToastAndroid.SHORT);
+    if (hasUpdatedTrip) {
+      ToastAndroid.show(PT_BR.UPDATE_TRIP_FORM.SUCCESS, ToastAndroid.SHORT);
       onClose();
     }
   };
 
   const closeModal = () => {
-    methods.reset();
+    methods.reset({
+      destination: "",
+      startDate: new Date(),
+      endDate: new Date(),
+      status: "CREATED",
+    });
     onClose();
   };
+
+  useEffect(() => {
+    refetch().then(() => {
+      methods.reset(defaultValues);
+    });
+  }, [tripId, isLoadingTrip]);
 
   return (
     <>
       <BottomSheet isVisible={isVisible}>
         <View style={styles.bottomSheet}>
           <Text style={styles.textTitle} h4>
-            {PT_BR.ADD_TRIP_FORM.TITLE}
+            {PT_BR.UPDATE_TRIP_FORM.TITLE}
           </Text>
 
           <FormProvider {...methods}>
@@ -111,8 +132,8 @@ function AddTripBottomSheet({ isVisible, token, onClose }: Props) {
                 fieldState: { error },
               }) => (
                 <Input
-                  label={PT_BR.ADD_TRIP_FORM.WHERE}
-                  placeholder={PT_BR.ADD_TRIP_FORM.WHERE_PLACEHOLDER}
+                  label={PT_BR.UPDATE_TRIP_FORM.WHERE}
+                  placeholder={PT_BR.UPDATE_TRIP_FORM.WHERE_PLACEHOLDER}
                   errorStyle={{ color: "red" }}
                   errorMessage={error?.message && PT_BR.VALIDATION.NOT_EMPTY}
                   value={value}
@@ -132,7 +153,7 @@ function AddTripBottomSheet({ isVisible, token, onClose }: Props) {
                   }
                 />
                 <Text>{`  ${
-                  PT_BR.ADD_TRIP_FORM.WHEN_FROM
+                  PT_BR.UPDATE_TRIP_FORM.WHEN_FROM
                 } ${watchStartDate.toLocaleDateString("pt-BR")}`}</Text>
               </View>
 
@@ -144,19 +165,19 @@ function AddTripBottomSheet({ isVisible, token, onClose }: Props) {
                   }
                 />
                 <Text>{`  ${
-                  PT_BR.ADD_TRIP_FORM.WHEN_TO
+                  PT_BR.UPDATE_TRIP_FORM.WHEN_TO
                 } ${watchEndDate.toLocaleDateString("pt-BR")}`}</Text>
               </View>
 
               <View style={styles.submitButtonArea}>
                 <Button
                   onPress={() => closeModal()}
-                  title={PT_BR.ADD_TRIP_FORM.CANCEL}
+                  title={PT_BR.UPDATE_TRIP_FORM.CANCEL}
                   style={styles.submitButton}
                 />
                 <Button
                   onPress={methods.handleSubmit(onSubmit, onError)}
-                  title={PT_BR.ADD_TRIP_FORM.SUBMIT}
+                  title={PT_BR.UPDATE_TRIP_FORM.SUBMIT}
                   style={styles.submitButton}
                 />
               </View>
@@ -191,4 +212,4 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default AddTripBottomSheet;
+export default UpdateTripBottomSheet;

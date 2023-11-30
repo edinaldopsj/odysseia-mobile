@@ -30,6 +30,7 @@ const PT_BR = {
     ADD: "Nova viagem",
     FROM: "De",
     TO: "Até",
+    NO_DESTINATION: "Sem destino",
   },
 
   MY_DIARIES: {
@@ -49,6 +50,19 @@ const PT_BR = {
     SUBMIT: "Adicionar",
     CANCEL: "Cancelar",
     SUCCESS: "Viagem adicionada com sucesso!",
+  },
+
+  UPDATE_TRIP_FORM: {
+    TITLE: "Atualizar viagem",
+    WHERE: "Para onde?",
+    WHERE_PLACEHOLDER: "Digite o destino",
+    WHEN_FROM: "De que data?",
+    WHEN_PLACEHOLDER: "Digite a data de partida",
+    WHEN_TO: "Até que data?",
+    WHEN_TO_PLACEHOLDER: "Digite a data de chegada",
+    SUBMIT: "Atualizar",
+    CANCEL: "Cancelar",
+    SUCCESS: "Viagem atualizada com sucesso!",
   },
 
   REMOVE_TRIP_DIALOG: {
