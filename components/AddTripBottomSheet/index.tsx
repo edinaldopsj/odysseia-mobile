@@ -15,15 +15,17 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { Alert, View } from "react-native";
+import { Alert, ToastAndroid, View } from "react-native";
 import { z } from "zod";
 
 import PT_BR from "../../lang/pt-br";
+import { addTrip } from "../../providers/trips";
 import { useInputStyle } from "../../styles/inputs";
 import { getReadableValidationErrorMessage } from "../../utils/forms";
 
 type Props = {
   isVisible: boolean;
+  token: string;
   onClose: () => void;
 };
 
@@ -41,7 +43,7 @@ const createTripFormSchema = z
 
 export type createTripFormData = z.infer<typeof createTripFormSchema>;
 
-function AddTripBottomSheet({ isVisible, onClose }: Props) {
+function AddTripBottomSheet({ isVisible, token, onClose }: Props) {
   const styles = useStyles();
   const inputStyle = useInputStyle();
 
@@ -77,9 +79,16 @@ function AddTripBottomSheet({ isVisible, onClose }: Props) {
     Alert.alert("Warning", getReadableValidationErrorMessage(errors));
   };
 
-  const onSubmit: SubmitHandler<createTripFormData> = (
+  const onSubmit: SubmitHandler<createTripFormData> = async (
     data: createTripFormData,
-  ) => console.log({ data });
+  ) => {
+    const hasAddedTrip = await addTrip(data, token);
+
+    if (hasAddedTrip) {
+      ToastAndroid.show(PT_BR.ADD_TRIP_FORM.SUCCESS, ToastAndroid.SHORT);
+      onClose();
+    }
+  };
 
   const closeModal = () => {
     methods.reset();

@@ -1,4 +1,5 @@
 // import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { makeStyles, Text } from "@rneui/themed";
 import React, { useState } from "react";
@@ -10,26 +11,49 @@ import CreateUserForm, {
 } from "../components/CreateUserForm";
 import GetUserCodeForm, { getUserCodeData } from "../components/GetUserCode";
 import PT_BR from "../lang/pt-br";
+import { createCodeToken, validateCodeToken } from "../providers/auth";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
 function Home({ navigation }: Props) {
+  const [email, setEmail] = useState("");
   const [hasEmail, setHasEmail] = useState(false);
 
   const styles = useStyles();
-  const onCreateUserFormSuccess = (data: createUserFormData) => {
-    console.log({ data });
+  const onCreateUserFormSuccess = async (data: createUserFormData) => {
+    const token = (await AsyncStorage.getItem("@token")) || "";
 
-    setHasEmail(true);
+    if (token) {
+      navigation.navigate("MyTrips", {
+        token,
+      });
+    }
+
+    const hasSentEmail = await createCodeToken(data.email);
+
+    if (hasSentEmail?.success) {
+      setEmail(data.email);
+      setHasEmail(true);
+    }
   };
 
-  const onGetUserCodeFormSuccess = (data: getUserCodeData) => {
-    console.log({ data });
-    navigation.navigate("MyTrips");
+  const onGetUserCodeFormSuccess = async (data: getUserCodeData) => {
+    if (email && data.code) {
+      const hasReceivedCode = await validateCodeToken(data.code, email);
+
+      if (hasReceivedCode?.data?.token) {
+        await AsyncStorage.setItem("@token", hasReceivedCode?.data?.token);
+
+        navigation.navigate("MyTrips", {
+          token: hasReceivedCode?.data?.token,
+        });
+      }
+    }
   };
 
   const onCancelCodeSubmit = () => {
     setHasEmail(false);
+    setEmail("");
   };
 
   return (

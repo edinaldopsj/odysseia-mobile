@@ -28,6 +28,8 @@ const PT_BR = {
     INFO: "Ver mais",
     DELETE: "Remover",
     ADD: "Nova viagem",
+    FROM: "De",
+    TO: "Até",
   },
 
   MY_DIARIES: {
@@ -46,6 +48,7 @@ const PT_BR = {
     WHEN_TO_PLACEHOLDER: "Digite a data de chegada",
     SUBMIT: "Adicionar",
     CANCEL: "Cancelar",
+    SUCCESS: "Viagem adicionada com sucesso!",
   },
 
   REMOVE_TRIP_DIALOG: {
@@ -53,6 +56,7 @@ const PT_BR = {
     MESSAGE: "Tem certeza que deseja remover esta viagem?",
     YES: "Sim",
     NO: "Não",
+    SUCCESS: "Viagem removida com sucesso!",
   },
 
   REMOVE_DIARY_ENTRY_DIALOG: {
@@ -60,6 +64,7 @@ const PT_BR = {
     MESSAGE: "Tem certeza que deseja remover esta entrada do diário?",
     YES: "Sim",
     NO: "Não",
+    SUCCESS: "Entrada do diário removida com sucesso!",
   },
 
   ADD_DIARY_ENTRY_FORM: {
