@@ -8,6 +8,7 @@ import { z } from "zod";
 import { RootStackParamList } from "../App";
 import AddDiaryEntryBottomSheet from "../components/AddDiaryEntryBottomSheet";
 import RemoveDiaryEntryDialog from "../components/RemoveDiaryEntryDialog";
+import UpdateDiaryEntryBottomSheet from "../components/UpdateDiaryEntryBottomSheet";
 import PT_BR from "../lang/pt-br";
 import useGetDiaries from "../providers/diaries";
 
@@ -31,6 +32,9 @@ function MyDiaries({ route }: Props) {
   const [isAddDiaryModalVisible, setIsAddDiaryModalVisible] = useState(false);
   const [removeDiaryId, setRemoveDiaryId] = useState<number | null>(null);
   const [isRemoveTripDialogVisible, setIsRemoveTripDialogVisible] =
+    useState(false);
+  const [updateTripId, setUpdateTripId] = useState<number | null>(null);
+  const [isUpdateTripModalVisible, setIsUpdateTripModalVisible] =
     useState(false);
 
   const token = route.params?.token || "";
@@ -60,6 +64,12 @@ function MyDiaries({ route }: Props) {
     refetchDiaries();
   };
 
+  const triggerUpdateModal = (onClose: () => void, id: number) => {
+    setIsUpdateTripModalVisible(true);
+    setUpdateTripId(id);
+    onClose();
+  };
+
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
@@ -73,6 +83,14 @@ function MyDiaries({ route }: Props) {
                   onPress={() => triggerDeleteModal(reset, diary.id)}
                   icon={{ name: "delete", color: "white" }}
                   buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
+                />
+              )}
+              leftContent={(reset) => (
+                <Button
+                  title={PT_BR.MY_DIARIES.EDIT}
+                  onPress={() => triggerUpdateModal(reset, diary.id)}
+                  icon={{ name: "edit", color: "white" }}
+                  buttonStyle={{ minHeight: "100%", backgroundColor: "blue" }}
                 />
               )}
             >
@@ -119,6 +137,16 @@ function MyDiaries({ route }: Props) {
         isVisible={isRemoveTripDialogVisible}
         onClose={() => reloadAfterRemoval()}
         diaryId={removeDiaryId ?? 0}
+        tripId={tripId}
+        token={token}
+      />
+      <UpdateDiaryEntryBottomSheet
+        isVisible={isUpdateTripModalVisible}
+        onClose={() => {
+          setIsUpdateTripModalVisible(false);
+          setUpdateTripId(null);
+        }}
+        diaryId={updateTripId ?? 0}
         tripId={tripId}
         token={token}
       />

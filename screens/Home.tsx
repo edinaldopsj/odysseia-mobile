@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { makeStyles, Text } from "@rneui/themed";
 import React, { useState } from "react";
-import { View } from "react-native";
+import { ToastAndroid, View } from "react-native";
 
 import { RootStackParamList } from "../App";
 import CreateUserForm, {
@@ -27,13 +27,15 @@ function Home({ navigation }: Props) {
       navigation.navigate("MyTrips", {
         token,
       });
-    }
+    } else {
+      const hasSentEmail = await createCodeToken(data.email);
 
-    const hasSentEmail = await createCodeToken(data.email);
-
-    if (hasSentEmail?.success) {
-      setEmail(data.email);
-      setHasEmail(true);
+      if (hasSentEmail?.success) {
+        setEmail(data.email);
+        setHasEmail(true);
+      } else {
+        ToastAndroid.show("Erro ao enviar código", ToastAndroid.SHORT);
+      }
     }
   };
 

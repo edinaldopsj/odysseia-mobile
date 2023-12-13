@@ -39,6 +39,8 @@ const PT_BR = {
     ADD: "Nova entrada",
     FROM: "De",
     TO: "Até",
+    ADD_PHOTOS: "Adicionar fotos",
+    EDIT: "Editar",
   },
 
   ADD_TRIP_FORM: {
@@ -84,6 +86,18 @@ const PT_BR = {
   },
 
   ADD_DIARY_ENTRY_FORM: {
+    TITLE: "Nova entrada do diário",
+    WHEN_TO: "Quando foi?",
+    LOCATION: "Onde foi?",
+    LOCATION_PLACEHOLDER: "Digite o local",
+    DESCRIPTION: "Como foi?",
+    DESCRIPTION_PLACEHOLDER: "Digite a descrição",
+    SUBMIT: "Adicionar",
+    CANCEL: "Cancelar",
+    SUCCESS: "Entrada do diário adicionada com sucesso!",
+  },
+
+  UPDATE_DIARY_ENTRY_FORM: {
     TITLE: "Nova entrada do diário",
     WHEN_TO: "Quando foi?",
     LOCATION: "Onde foi?",

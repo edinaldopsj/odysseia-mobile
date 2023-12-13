@@ -1,0 +1,29 @@
+{
+  "build": {
+    "preview": {
+      "node": "16.14.2",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "preview2": {
+      "node": "16.14.2",
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "preview3": {
+      "node": "16.14.2",
+      "developmentClient": true
+    },
+    "production": {
+      "node": "16.14.2",
+      "distribution": "store",
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "autoIncrement": true
+    }
+  }
+}
