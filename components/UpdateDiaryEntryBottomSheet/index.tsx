@@ -9,7 +9,7 @@ import {
   makeStyles,
 } from "@rneui/themed";
 import * as DocumentPicker from "expo-document-picker";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Controller,
   FormProvider,
@@ -17,11 +17,15 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { Alert, ToastAndroid, View } from "react-native";
+import { Alert, Image, ToastAndroid, View } from "react-native";
 import { z } from "zod";
 
 import PT_BR from "../../lang/pt-br";
-import { addDiary } from "../../providers/diaries";
+import {
+  addDiary,
+  updateDiaryImage,
+  useGetDiaryById,
+} from "../../providers/diaries";
 import { useInputStyle } from "../../styles/inputs";
 import { getReadableValidationErrorMessage } from "../../utils/forms";
 
@@ -37,7 +41,7 @@ const updateDiaryEntryFormSchema = z.object({
   location: z.string().min(1, PT_BR.VALIDATION.NOT_EMPTY),
   description: z.string().min(1, PT_BR.VALIDATION.NOT_EMPTY),
   date: z.date(),
-  file: z.any(),
+  imgUrl: z.any().optional(),
 });
 
 export type updateDiaryEntryFormData = z.infer<
@@ -54,13 +58,24 @@ function UpdateDiaryEntryBottomSheet({
   const styles = useStyles();
   const inputStyle = useInputStyle();
 
+  const [id, setId] = useState<number>(0);
+  const [imageUri, setImageUri] = useState<string>("");
+  const [defaultValues] = useState<updateDiaryEntryFormData>({
+    location: "",
+    description: "",
+    date: new Date(),
+    imgUrl: "",
+  });
+
+  const { data: diaryData, isLoading: isLoadingDiary } = useGetDiaryById(
+    tripId,
+    diaryId,
+    token,
+  );
+
   const methods = useForm<updateDiaryEntryFormData>({
     resolver: zodResolver(updateDiaryEntryFormSchema),
-    defaultValues: {
-      location: "",
-      description: "",
-      date: new Date(),
-    },
+    defaultValues,
   });
 
   const watchDate = methods.watch("date");
@@ -80,20 +95,6 @@ function UpdateDiaryEntryBottomSheet({
     Alert.alert("Warning", getReadableValidationErrorMessage(errors));
   };
 
-  const onSubmit: SubmitHandler<updateDiaryEntryFormData> = async (
-    data: updateDiaryEntryFormData,
-  ) => {
-    const hasAddedDiaryEntry = await addDiary(data, tripId, token);
-
-    if (hasAddedDiaryEntry) {
-      ToastAndroid.show(
-        PT_BR.UPDATE_DIARY_ENTRY_FORM.SUCCESS,
-        ToastAndroid.SHORT,
-      );
-      onClose();
-    }
-  };
-
   const closeModal = () => {
     methods.reset({
       location: "",
@@ -103,7 +104,7 @@ function UpdateDiaryEntryBottomSheet({
     onClose();
   };
 
-  const handleDocumentSelection = useCallback(async () => {
+  const handleDocumentSelection = useCallback(async (id: number) => {
     try {
       const response = await DocumentPicker.getDocumentAsync({
         type: "image/*",
@@ -111,14 +112,65 @@ function UpdateDiaryEntryBottomSheet({
       });
 
       if (response.type === "success") {
-        console.log({ response });
+        const file = {
+          uri: response.uri,
+          type: response.mimeType,
+          name: response.name,
+        };
 
-        methods.setValue("file", response);
+        setImageUri(response.uri);
+
+        const hasUploadedImage = await updateDiaryImage(
+          tripId,
+          id, // diaryId
+          token,
+          file,
+        );
+
+        if (hasUploadedImage) {
+          ToastAndroid.show(
+            PT_BR.UPDATE_DIARY_ENTRY_FORM.IMAGE_UPDATED,
+            ToastAndroid.SHORT,
+          );
+        } else {
+          ToastAndroid.show(
+            PT_BR.UPDATE_DIARY_ENTRY_FORM.IMAGE_NOT_UPDATED,
+            ToastAndroid.SHORT,
+          );
+        }
       }
     } catch (err) {
       console.warn(err);
     }
   }, []);
+
+  const onSubmit: SubmitHandler<updateDiaryEntryFormData> = async (
+    data: updateDiaryEntryFormData,
+  ) => {
+    const hasUpdatedDiary = await addDiary(data, tripId, token);
+
+    if (hasUpdatedDiary) {
+      ToastAndroid.show(
+        PT_BR.UPDATE_DIARY_ENTRY_FORM.SUCCESS,
+        ToastAndroid.SHORT,
+      );
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    setId(diaryId);
+  }, [diaryId]);
+
+  useEffect(() => {
+    if (diaryData) {
+      methods.setValue("location", diaryData.location);
+      methods.setValue("description", diaryData.description);
+      methods.setValue("date", new Date(diaryData.date));
+
+      setImageUri(diaryData.imgUrl ?? "");
+    }
+  }, [diaryData, isLoadingDiary]);
 
   return (
     <>
@@ -171,7 +223,6 @@ function UpdateDiaryEntryBottomSheet({
               )}
               name="description"
             />
-            <Button title="Select 📑" onPress={handleDocumentSelection} />
             <View style={styles.buttonArea}>
               <View style={styles.dateButtonArea}>
                 <Button
@@ -197,6 +248,28 @@ function UpdateDiaryEntryBottomSheet({
                   style={styles.submitButton}
                 />
               </View>
+
+              {!imageUri ? (
+                <Button
+                  title={PT_BR.UPDATE_DIARY_ENTRY_FORM.ADD_IMAGE}
+                  onPress={() => handleDocumentSelection(id)}
+                  style={{ paddingTop: 5 }}
+                />
+              ) : (
+                <>
+                  <Image
+                    source={{
+                      uri: imageUri,
+                    }}
+                    style={{ width: "100%", height: 150 }}
+                  />
+                  <Button
+                    title={PT_BR.UPDATE_DIARY_ENTRY_FORM.REMOVE_IMAGE}
+                    style={{ paddingTop: 5 }}
+                    onPress={() => setImageUri("")}
+                  />
+                </>
+              )}
             </View>
           </FormProvider>
         </View>
@@ -218,7 +291,7 @@ const useStyles = makeStyles(() => ({
     marginBottom: 5,
   },
   submitButtonArea: {
-    paddingTop: 15,
+    paddingVertical: 15,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",

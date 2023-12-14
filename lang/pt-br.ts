@@ -98,7 +98,7 @@ const PT_BR = {
   },
 
   UPDATE_DIARY_ENTRY_FORM: {
-    TITLE: "Nova entrada do diário",
+    TITLE: "Atualizar entrada do diário",
     WHEN_TO: "Quando foi?",
     LOCATION: "Onde foi?",
     LOCATION_PLACEHOLDER: "Digite o local",
@@ -107,6 +107,10 @@ const PT_BR = {
     SUBMIT: "Adicionar",
     CANCEL: "Cancelar",
     SUCCESS: "Entrada do diário adicionada com sucesso!",
+    ADD_IMAGE: "Adicionar imagem",
+    REMOVE_IMAGE: "Remover imagem",
+    IMAGE_UPDATED: "Imagem atualizada com sucesso!",
+    IMAGE_NOT_UPDATED: "Imagem não atualizada",
   },
 
   VALIDATION: {

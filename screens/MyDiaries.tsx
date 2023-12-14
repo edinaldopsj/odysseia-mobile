@@ -21,6 +21,7 @@ const getDiarySchema = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
   deletedAt: z.string().nullable(),
+  imgUrl: z.string().nullable(),
 });
 
 export type getDiaryData = z.infer<typeof getDiarySchema>;
@@ -33,8 +34,8 @@ function MyDiaries({ route }: Props) {
   const [removeDiaryId, setRemoveDiaryId] = useState<number | null>(null);
   const [isRemoveTripDialogVisible, setIsRemoveTripDialogVisible] =
     useState(false);
-  const [updateTripId, setUpdateTripId] = useState<number | null>(null);
-  const [isUpdateTripModalVisible, setIsUpdateTripModalVisible] =
+  const [updateDiaryId, setUpdateDiaryId] = useState<number | null>(null);
+  const [isUpdateDiaryModalVisible, setIsUpdateDiaryModalVisible] =
     useState(false);
 
   const token = route.params?.token || "";
@@ -59,15 +60,16 @@ function MyDiaries({ route }: Props) {
 
   const reloadAfterRemoval = () => {
     setIsRemoveTripDialogVisible(false);
+    setIsUpdateDiaryModalVisible(false);
     setRemoveDiaryId(null);
+    setUpdateDiaryId(null);
 
     refetchDiaries();
   };
 
   const triggerUpdateModal = (onClose: () => void, id: number) => {
-    setIsUpdateTripModalVisible(true);
-    setUpdateTripId(id);
-    onClose();
+    setUpdateDiaryId(id);
+    setIsUpdateDiaryModalVisible(true);
   };
 
   return (
@@ -140,13 +142,11 @@ function MyDiaries({ route }: Props) {
         tripId={tripId}
         token={token}
       />
+
       <UpdateDiaryEntryBottomSheet
-        isVisible={isUpdateTripModalVisible}
-        onClose={() => {
-          setIsUpdateTripModalVisible(false);
-          setUpdateTripId(null);
-        }}
-        diaryId={updateTripId ?? 0}
+        isVisible={isUpdateDiaryModalVisible}
+        onClose={() => reloadAfterRemoval()}
+        diaryId={updateDiaryId ?? 0}
         tripId={tripId}
         token={token}
       />

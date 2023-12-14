@@ -13,8 +13,12 @@ export const API = {
   // diaries
   GET_ALL_DIARIES: (tripId: number) => `/diary/${tripId}`,
   CREATE_DIARY: (tripId: number) => `/diary/${tripId}`,
-  GET_DIARY_BY_ID: (diaryId: number) => `/diary/${diaryId}`,
-  UPDATE_DIARY: (diaryId: number) => `/diary/${diaryId}`,
+  GET_DIARY_BY_ID: (tripId: number, diaryId: number) =>
+    `/diary/${tripId}/${diaryId}`,
+  UPDATE_DIARY: (tripId: number, diaryId: number) =>
+    `/diary/${tripId}/${diaryId}`,
   DELETE_DIARY: (tripId: number, diaryId: number) =>
+    `/diary/${tripId}/${diaryId}`,
+  UPDATE_DIARY_IMAGE: (tripId: number, diaryId: number) =>
     `/diary/${tripId}/${diaryId}`,
 };
