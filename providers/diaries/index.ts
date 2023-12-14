@@ -97,8 +97,8 @@ export function updateDiaryImage(
 
 export function updateDiary(
   diaryId: number,
-  diaryData: updateDiaryEntryFormData,
   tripId: number,
+  diaryData: updateDiaryEntryFormData,
   token: string,
 ) {
   return axiosInstance.put(

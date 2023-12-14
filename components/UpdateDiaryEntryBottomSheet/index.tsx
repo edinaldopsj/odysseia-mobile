@@ -22,7 +22,7 @@ import { z } from "zod";
 
 import PT_BR from "../../lang/pt-br";
 import {
-  addDiary,
+  updateDiary,
   updateDiaryImage,
   useGetDiaryById,
 } from "../../providers/diaries";
@@ -147,7 +147,7 @@ function UpdateDiaryEntryBottomSheet({
   const onSubmit: SubmitHandler<updateDiaryEntryFormData> = async (
     data: updateDiaryEntryFormData,
   ) => {
-    const hasUpdatedDiary = await addDiary(data, tripId, token);
+    const hasUpdatedDiary = await updateDiary(diaryId, tripId, data, token);
 
     if (hasUpdatedDiary) {
       ToastAndroid.show(
